@@ -3,8 +3,9 @@ CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 CC = cc
 RM = rm -rf
 
-SRCS = src.c \
-			utile.c
+SRCS = main.c \
+			utile.c \
+			check_argv.c
 
 OBJS = $(SRCS:.c=.o)
 
