@@ -6,28 +6,22 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/14 17:57:49 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/14 18:20:34 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
 
-int	*initial(char **argv, t_table *tab)
+void	creat_philo(t_table *tab)
 {
-	int	i;
+	int	nbr_philo;
 
-	i = 1;
-	tab->nbr_philo = ft_atoi(argv[i]);
-	i++;
-	tab->t_die = ft_atoi(argv[i]);
-	i++;
-	tab->t_eat = ft_atoi(argv[i]);
-	i++;
-	tab->t_dodo = ft_atoi(argv[i]);
-	i++;
-	if (argv[i])
-		tab->num_meal = ft_atoi(argv[i]);
-	return (0);
+	nbr_philo = tab->nbr_philo;
+	while (nbr_philo > 0)
+	{
+		
+		nbr_philo--;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -44,7 +38,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (initial(argv, tab) != 0)
 		return(1);
-	
+	creat_philo(tab);
 	printf_arg(tab);
 	free(tab);
 	return (0);
