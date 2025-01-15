@@ -1,0 +1,10 @@
+add mutex on ur init
+do the routine thinking eating sleeping.
+
+Supervisor check if 1 philo dead or all philo ate enough
+if they all ate enough supervisor say stop = 1.
+
+all philo before locking mutex, eating, sleeping check if stop = 1
+if stop = 1 (unlock mutex) and return.
+
+dont forgot to destroy mutex.

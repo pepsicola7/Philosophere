@@ -6,11 +6,24 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:23:28 by peli              #+#    #+#             */
-/*   Updated: 2025/01/14 18:15:54 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/15 15:37:34 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
+
+void	free_philo(t_table *tab, t_philo *philosopher)
+{
+	int	i;
+
+	i = 0;
+	while (i <= tab->nbr_philo)
+	{
+		free(philosopher);
+		i++;
+	}
+	return ;
+}
 
 void	printf_arg(t_table *tab)
 {
