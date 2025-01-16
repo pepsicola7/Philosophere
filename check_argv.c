@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:57:03 by peli              #+#    #+#             */
-/*   Updated: 2025/01/14 17:52:07 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/16 15:35:02 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ int	is_argv_valide(char *str)
 
 	i = 0;
 	if (!str)
-		return (-1);
+		return (0);
 	if (ft_atoi(str) == -1)
-		return (-1);
-	return (0);
+		return (0);
+	return (1);
 }
 
 int	check_arg(int argc, char **argv)
@@ -69,16 +69,16 @@ int	check_arg(int argc, char **argv)
 	if (argc > 6 || argc < 5 )
 	{
 		printf ("erreurs of the num of argument\n");
-		return (-1);
+		return (0);
 	}
 	while (argv[i])
 	{
-		if (is_argv_valide(argv[i]) == -1)
+		if (!is_argv_valide(argv[i]))
 		{
 			printf("The argv is not valide\n");
-			return (-1);
+			return (0);
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }

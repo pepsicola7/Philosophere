@@ -6,100 +6,57 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/15 16:24:07 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/16 19:03:16 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
 
-// void	thinking(t_philo *philo)
-// {
-		// printf(" timestamp_in_ms %d is thinking", philo->id);
-	
-// }
-
-void	eating(t_philo *philo)
-{
-	printf(" timestamp_in_ms %d is eating", philo->id);
-	usleep(philo->table->t_eat);
-}
-
-void	sleeping(t_philo *philo)
-{
-	printf(" timestamp_in_ms %d is sleeping", philo->id);
-	usleep(philo->table->t_dodo);
-}
-
-void	lifestyle(void *arg)
-{
-	t_philo *philo;
-
-	philo = arg;
-	while(1)
-	{
-		// thinking(philo);
-		eating(philo);
-		sleeping(philo);
-	}
-}
-
-void	initial_philo(t_table *tab, t_philo *philosopher)
+void	join_philo(t_table *tab, t_philo *philosopher)
 {
 	int	i;
 
-	i = 1;
-	while (i <= tab->nbr_philo)
-	{
-		philosopher->id = i;
-		philosopher->ate_meal = 0;
-		i++;
-	}
-	return ;
-}
-
-void	create_philo(t_table *tab)
-{
-	t_philo			*philosopher;
-	int				i;
-
-	philosopher = tab->philo;
-	philosopher = malloc(sizeof(t_philo) * (tab->nbr_philo));
-	if (!philosopher)
-		return (1);
-	initial_philo(tab, philosopher);
-	while (i <= tab->nbr_philo)
-	{
-		pthread_create(&philosopher[i].thread, NULL, lifestyle, &philosopher[i]);
-		i++;
-	}
 	i = 0;
-	//supervisor(tab);
 	while (i < tab->nbr_philo)
 	{
 		pthread_join(philosopher[i].thread, NULL);
 		i++;
 	}
+}
+
+int	create_philo(t_table *tab)
+{
+	t_philo		*philosopher;
+	int			i;
+
+	tab->philo = malloc(sizeof(t_philo) * (tab->nbr_philo));
+	if (!tab->philo)
+		return (0);
+	philosopher = tab->philo;
+	initial_philo(tab, philosopher);
+	i = 0;
+	while (i < tab->nbr_philo)
+	{
+		pthread_create(&philosopher[i].thread, NULL, lifestyle, &philosopher[i]);
+		i++;
+	}
+	//supervisor(tab);
+	join_philo(tab, philosopher);
 	free_philo(tab, philosopher);
-	return ;
+	return (1);
 }
 
 int	main(int argc, char **argv)
 {
-	t_table *tab;
+	t_table tab;
 	
-	tab = malloc(sizeof(size_t) * 1);
-	if (!tab)
-	{
-		printf("malloc failed\n");
+	if (!check_arg(argc, argv))
 		return (1);
-	}
-	if (check_arg(argc, argv) == -1)
-		return (1);
-	if (initial(argv, tab) != 0)
+	if (!initial_tab(argv, &tab))
 		return(1);
-	creat_philo(tab);
-	printf_arg(tab);
-	free(tab);
+	if (!create_philo(&tab))
+		return(1);
+	// printf_arg(tab);
 	return (0);
 }
 
@@ -125,3 +82,15 @@ int	main(int argc, char **argv)
 // 	printf ("add : %ld\n", add_num);
 // 	return (NULL);
 // }
+
+// For initialize
+// int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr);
+
+// For lock and unlock
+// int pthread_mutex_lock(pthread_mutex_t *mutex);
+// int pthread_mutex_unlock(pthread_mutex_t *mutex);
+// Both of these functions return 0 for success and an error code otherwise.
+
+// For destroy
+// int pthread_mutex_destroy(pthread_mutex_t *mutex);
+// This function destroys an unlocked mutex;

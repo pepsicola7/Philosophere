@@ -1,11 +1,13 @@
 NAME = philo
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g
 CC = cc
 RM = rm -rf
 
 SRCS = main.c \
 			utile.c \
-			check_argv.c
+			check_argv.c \
+			initialize.c \
+			lifestyle.c
 
 OBJS = $(SRCS:.c=.o)
 

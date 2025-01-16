@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:23:28 by peli              #+#    #+#             */
-/*   Updated: 2025/01/15 15:37:34 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/16 18:58:50 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,3 @@ void	printf_arg(t_table *tab)
 	return ;
 }
 
-int	*initial(char **argv, t_table *tab)
-{
-	int	i;
-
-	i = 1;
-	tab->nbr_philo = ft_atoi(argv[i]);
-	i++;
-	tab->t_die = ft_atoi(argv[i]);
-	i++;
-	tab->t_eat = ft_atoi(argv[i]);
-	i++;
-	tab->t_dodo = ft_atoi(argv[i]);
-	i++;
-	if (argv[i])
-		tab->num_meal = ft_atoi(argv[i]);
-	return (0);
-}

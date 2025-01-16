@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:51:06 by peli              #+#    #+#             */
-/*   Updated: 2025/01/15 17:06:45 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/16 19:04:07 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <limits.h>
 
+typedef struct s_table t_table;
+
 typedef struct s_philo
 {
 	int			id;
@@ -26,8 +28,9 @@ typedef struct s_philo
 	int			lastimeiate;
 	pthread_t	thread;
 	t_table		*table;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	*left_fork;
 } t_philo;
-
 
 typedef struct s_table
 {
@@ -36,16 +39,22 @@ typedef struct s_table
 	int				t_eat;
 	int				t_dodo;
 	int				num_meal;
+	long			timestamp; // ?? dans quelle struc?
 	t_philo			*philo;
 	pthread_mutex_t	*fork;
-	int				stop;
+	// int				stop;
 } t_table;
 
 int		check_arg(int argc, char **argv);
 int		is_argv_valide(char *str);
 int		ft_atoi(char *str);
 void	printf_arg(t_table *tab);
-int		*initial(char **argv, t_table *tab);
+int		initial_tab(char **argv, t_table *tab);
 void	free_philo(t_table *tab, t_philo *philosopher);
+int		create_philo(t_table *tab);
+void	initial_philo(t_table *tab, t_philo *philosopher);
+void	*lifestyle(void *arg);
+void	sleeping(t_philo *philo);
+void	eating(t_philo *philo);
 
 #endif
