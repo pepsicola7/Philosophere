@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/16 19:03:16 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/17 19:15:46 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ void	join_philo(t_table *tab, t_philo *philosopher)
 	}
 }
 
+// void	supervisor(t_table *tab)
+// {
+	
+// }
+
 int	create_philo(t_table *tab)
 {
 	t_philo		*philosopher;
@@ -35,12 +40,13 @@ int	create_philo(t_table *tab)
 	philosopher = tab->philo;
 	initial_philo(tab, philosopher);
 	i = 0;
+	get_time_start(tab);
 	while (i < tab->nbr_philo)
 	{
 		pthread_create(&philosopher[i].thread, NULL, lifestyle, &philosopher[i]);
 		i++;
 	}
-	//supervisor(tab);
+	// supervisor(tab);
 	join_philo(tab, philosopher);
 	free_philo(tab, philosopher);
 	return (1);

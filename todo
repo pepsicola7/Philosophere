@@ -8,3 +8,7 @@ all philo before locking mutex, eating, sleeping check if stop = 1
 if stop = 1 (unlock mutex) and return.
 
 dont forgot to destroy mutex.
+
+the case for only 1 philo
+
+prototype usleep;

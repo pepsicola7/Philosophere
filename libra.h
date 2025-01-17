@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:51:06 by peli              #+#    #+#             */
-/*   Updated: 2025/01/16 19:04:07 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/17 19:16:07 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include <sys/time.h>
 
 typedef struct s_table t_table;
 
@@ -25,7 +26,7 @@ typedef struct s_philo
 {
 	int			id;
 	int			ate_meal;
-	int			lastimeiate;
+	int			lastimeate;
 	pthread_t	thread;
 	t_table		*table;
 	pthread_mutex_t	*right_fork;
@@ -39,10 +40,11 @@ typedef struct s_table
 	int				t_eat;
 	int				t_dodo;
 	int				num_meal;
-	long			timestamp; // ?? dans quelle struc?
+	long			start;
 	t_philo			*philo;
 	pthread_mutex_t	*fork;
-	// int				stop;
+	pthread_mutex_t	*printf;
+	int				stop;
 } t_table;
 
 int		check_arg(int argc, char **argv);
@@ -56,5 +58,6 @@ void	initial_philo(t_table *tab, t_philo *philosopher);
 void	*lifestyle(void *arg);
 void	sleeping(t_philo *philo);
 void	eating(t_philo *philo);
-
+void	get_time_start(t_table *tab);
+long	get_time(void);
 #endif
