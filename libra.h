@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:51:06 by peli              #+#    #+#             */
-/*   Updated: 2025/01/17 19:16:07 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/17 22:09:25 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_table
 	t_philo			*philo;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	*printf;
+	pthread_mutex_t	*status;
 	int				stop;
 } t_table;
 
@@ -56,6 +57,7 @@ void	free_philo(t_table *tab, t_philo *philosopher);
 int		create_philo(t_table *tab);
 void	initial_philo(t_table *tab, t_philo *philosopher);
 void	*lifestyle(void *arg);
+void	supervisor(t_table *tab, t_philo *philo);
 void	sleeping(t_philo *philo);
 void	eating(t_philo *philo);
 void	get_time_start(t_table *tab);

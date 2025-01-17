@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:02:15 by peli              #+#    #+#             */
-/*   Updated: 2025/01/17 21:04:46 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/17 22:18:00 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,44 +49,25 @@ void	sleeping(t_philo *philo)
 	usleep(philo->table->t_dodo);
 }
 
-// int	died(t_philo *philo)
-// {
-// 	int	i;
-
-// 	pthread_mutex_lock(philo->table->printf);
-// 	i = philo->table->timestamp - philo->lastimeate;
-// 	pthread_mutex_unlock(philo->table->printf);
-// 	if (i >= 1000)
-// 	{
-// 		pthread_mutex_lock(philo->table->printf);
-// 		printf("%ld %d died\n", philo->table->timestamp, philo->id);
-// 		pthread_mutex_unlock(philo->table->printf);
-// 		pthread_mutex_lock(philo->table->printf);
-// 		philo->table->stop = -1;
-// 		pthread_mutex_unlock(philo->table->printf);
-// 		return(0);
-// 	}
-// 	return (1);
-// }
-
 void	*lifestyle(void *arg)
 {
 	t_philo *philo;
 
 	philo = (t_philo*)arg;
-	while(philo->table->stop != -1)
+	while(1)
 	{
 		thinking(philo);
-		// if ((!died(philo)) || philo->table->stop == -1)
-		// 	break;
 		eating(philo);
 		if (philo->table->num_meal && philo->ate_meal == philo->table->num_meal)
 			break;
-		// if ((!died(philo)) || philo->table->stop == -1)
-		// 	break;
 		sleeping(philo);
-		// if ((!died(philo)) || philo->table->stop == -1)
-		// 	break;
+		pthread_mutex_lock(philo->table->status);
+		if (philo->table->stop == -1)
+		{
+			pthread_mutex_unlock(philo->table->status);
+			break;
+		}
+		pthread_mutex_unlock(philo->table->status);
 	}
 	return (NULL);
 }
