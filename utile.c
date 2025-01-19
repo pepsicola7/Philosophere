@@ -6,24 +6,11 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:23:28 by peli              #+#    #+#             */
-/*   Updated: 2025/01/17 19:19:44 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/19 16:37:51 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
-
-void	free_philo(t_table *tab, t_philo *philosopher)
-{
-	int	i;
-
-	i = 0;
-	while (i < tab->nbr_philo)
-	{
-		free(philosopher);
-		i++;
-	}
-	return ;
-}
 
 void	printf_arg(t_table *tab)
 {
@@ -51,4 +38,6 @@ long	get_time(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000L + tv.tv_usec / 1000L);
 }
+
+
 

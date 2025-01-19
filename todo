@@ -11,4 +11,4 @@ dont forgot to destroy mutex.
 
 the case for only 1 philo
 
-prototype usleep;
+prototype ft_usleep;

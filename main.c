@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/17 22:16:44 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/19 21:24:05 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,68 @@ void	join_philo(t_table *tab, t_philo *philosopher)
 	}
 }
 
+void	stop_all_philos(t_table *tab, t_philo *philo)
+{
+	int j;
+
+	j = 0;
+	while (j < tab->nbr_philo)
+	{
+		pthread_mutex_lock(&philo[j].status);
+		philo[j].stop = -1;
+		pthread_mutex_unlock(&philo[j].status);
+		++j;
+	}
+}
+
+int	all_philo_eat_num_meal( t_philo *philo)
+{
+	int i;
+	int	compteur;
+
+	i = 0;
+	compteur = 0;
+	while (i < philo->table->nbr_philo)
+	{
+		pthread_mutex_lock(&philo[i].status);
+		if (philo[i].ate_meal == philo[i].num_meal)
+			compteur++;
+		pthread_mutex_unlock(&philo[i].status);
+		i++;
+	}
+	if (compteur == philo->table->nbr_philo)
+		return (0);
+	return (1);
+}
+
 void	supervisor(t_table *tab, t_philo *philo)
 {
 	int	i;
 
-	i = 0;
-	while (i < tab->nbr_philo)
+	while (1)
 	{
-		pthread_mutex_lock(tab->status);
-		if ((get_time() - tab->philo[i].lastimeate) >= 1000)
+		i = 0;
+		if (!all_philo_eat_num_meal(philo))
 		{
-			pthread_mutex_lock(tab->printf);
-			printf("%ld %d died\n", get_time() - philo->table->start, philo->id);
-			pthread_mutex_unlock(tab->printf);
-			tab->stop = -1;
-			pthread_mutex_unlock(tab->status);
+			stop_all_philos(tab, philo);
 			return ;
 		}
-		pthread_mutex_unlock(tab->status);
-		i++;
+		while (i < tab->nbr_philo)
+		{
+			pthread_mutex_lock(&philo[i].status);
+			if ((get_time() - tab->philo[i].lastimeate) >= tab->t_die)
+			{
+				pthread_mutex_unlock(&philo[i].status);
+				pthread_mutex_lock(&tab->printf);
+				printf("%ld %d died\n", get_time() - philo->table->start, philo->id);
+				stop_all_philos(tab, philo);
+				pthread_mutex_unlock(&tab->printf);
+				return ;
+			}
+			else
+				pthread_mutex_unlock(&philo[i].status);
+			i++;
+		}
 	}
 }
 
@@ -54,18 +97,20 @@ int	create_philo(t_table *tab)
 	tab->philo = malloc(sizeof(t_philo) * (tab->nbr_philo));
 	if (!tab->philo)
 		return (0);
+	get_time_start(tab);
 	philosopher = tab->philo;
 	initial_philo(tab, philosopher);
 	i = 0;
-	get_time_start(tab);
 	while (i < tab->nbr_philo)
 	{
 		pthread_create(&philosopher[i].thread, NULL, lifestyle, &philosopher[i]);
 		i++;
 	}
 	supervisor(tab, philosopher);
+	// printf("COUCOU\n");
 	join_philo(tab, philosopher);
-	free_philo(tab, philosopher);
+	free(tab->fork);
+	free(philosopher);
 	return (1);
 }
 
@@ -79,7 +124,7 @@ int	main(int argc, char **argv)
 		return(1);
 	if (!create_philo(&tab))
 		return(1);
-	// printf_arg(tab);
+	// printf_arg(&tab);
 	return (0);
 }
 
