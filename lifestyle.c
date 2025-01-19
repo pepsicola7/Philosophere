@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:02:15 by peli              #+#    #+#             */
-/*   Updated: 2025/01/19 20:30:31 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/19 22:26:28 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	thinking(t_philo *philo)
 void	eating(t_philo *philo)
 {
 	// pthread_mutex_lock(&philo->table->status);
+	if (philo->table->nbr_philo == 1)
+		return ;
 	if (philo->id % 2 != 0)
 	{
 		pthread_mutex_lock(philo->right_fork);
@@ -72,39 +74,32 @@ void	*lifestyle(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo*)arg;
-	// if (philo->id %2 == 0)
-	// 	usleep(100);
+	usleep(100);
 	while(1)
 	{
-		pthread_mutex_lock(&philo->status);
-		if (philo->stop == -1)
-		{
-			pthread_mutex_unlock(&philo->status);
-			break;
-		}
-		pthread_mutex_unlock(&philo->status);
-		eating(philo);
-		// In supervisor, if EVERYONE ate num_meal time stop everyone
-		// if (philo->num_meal && philo->ate_meal == philo->table->num_meal)
+		// pthread_mutex_lock(&philo->status);
+		// if (philo->stop == -1)
+		// {
+		// 	pthread_mutex_unlock(&philo->status);
 		// 	break;
-		pthread_mutex_lock(&philo->status);
-		if (philo->stop == -1)
-		{
-			pthread_mutex_unlock(&philo->status);
-			break;
-		}
-		pthread_mutex_unlock(&philo->status);
+		// }
+		// pthread_mutex_unlock(&philo->status);
+		eating(philo);
+		// pthread_mutex_lock(&philo->status);
+		// if (philo->stop == -1)
+		// {
+		// 	pthread_mutex_unlock(&philo->status);
+		// 	break;
+		// }
+		// pthread_mutex_unlock(&philo->status);
 		sleeping(philo);
-		// pthread_mutex_lock(&philo->table->status);
 		pthread_mutex_lock(&philo->status);
 		if (philo->stop == -1)
 		{
 			pthread_mutex_unlock(&philo->status);
-			// pthread_mutex_unlock(&philo->table->status);
 			break;
 		}
 		pthread_mutex_unlock(&philo->status);
-		// pthread_mutex_unlock(&philo->table->status);
 		thinking(philo);
 	}
 	return (NULL);

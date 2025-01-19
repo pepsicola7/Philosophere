@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/19 21:24:05 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/19 22:23:46 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ void	supervisor(t_table *tab, t_philo *philo)
 			{
 				pthread_mutex_unlock(&philo[i].status);
 				pthread_mutex_lock(&tab->printf);
-				printf("%ld %d died\n", get_time() - philo->table->start, philo->id);
-				stop_all_philos(tab, philo);
+				printf("%ld %d died\n", get_time() - tab->start, philo[i].id);
 				pthread_mutex_unlock(&tab->printf);
+				stop_all_philos(tab, philo);
 				return ;
 			}
 			else
@@ -87,6 +87,20 @@ void	supervisor(t_table *tab, t_philo *philo)
 			i++;
 		}
 	}
+}
+void	destroy_philo(t_table *tab, t_philo *philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < tab->nbr_philo)
+	{
+		pthread_mutex_destroy(&philo[i].status);
+		pthread_mutex_destroy(&tab->fork[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&tab->printf);
+	pthread_mutex_destroy(&tab->status);
 }
 
 int	create_philo(t_table *tab)
@@ -107,8 +121,8 @@ int	create_philo(t_table *tab)
 		i++;
 	}
 	supervisor(tab, philosopher);
-	// printf("COUCOU\n");
 	join_philo(tab, philosopher);
+	destroy_philo(tab, philosopher);
 	free(tab->fork);
 	free(philosopher);
 	return (1);

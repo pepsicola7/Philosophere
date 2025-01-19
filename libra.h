@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:51:06 by peli              #+#    #+#             */
-/*   Updated: 2025/01/19 18:52:49 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/19 22:18:35 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,6 @@ void	sleeping(t_philo *philo);
 void	eating(t_philo *philo);
 void	get_time_start(t_table *tab);
 long	get_time(void);
+void	ft_usleep(useconds_t time_in_ms);
+void	philo_printf(t_philo *philo, char *message);
 #endif
