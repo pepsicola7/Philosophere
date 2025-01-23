@@ -6,41 +6,15 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 14:51:16 by peli              #+#    #+#             */
-/*   Updated: 2025/01/19 22:23:46 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/23 12:18:16 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
 
-void	join_philo(t_table *tab, t_philo *philosopher)
+int	all_philo_eat_num_meal(t_philo *philo)
 {
 	int	i;
-
-	i = 0;
-	while (i < tab->nbr_philo)
-	{
-		pthread_join(philosopher[i].thread, NULL);
-		i++;
-	}
-}
-
-void	stop_all_philos(t_table *tab, t_philo *philo)
-{
-	int j;
-
-	j = 0;
-	while (j < tab->nbr_philo)
-	{
-		pthread_mutex_lock(&philo[j].status);
-		philo[j].stop = -1;
-		pthread_mutex_unlock(&philo[j].status);
-		++j;
-	}
-}
-
-int	all_philo_eat_num_meal( t_philo *philo)
-{
-	int i;
 	int	compteur;
 
 	i = 0;
@@ -58,6 +32,15 @@ int	all_philo_eat_num_meal( t_philo *philo)
 	return (1);
 }
 
+void	supervisor_2(t_table *tab, t_philo *philo, int i)
+{
+	pthread_mutex_unlock(&philo[i].status);
+	pthread_mutex_lock(&tab->printf);
+	printf("%ld %d died\n", get_time() - tab->start, philo[i].id);
+	pthread_mutex_unlock(&tab->printf);
+	stop_all_philos(tab, philo);
+}
+
 void	supervisor(t_table *tab, t_philo *philo)
 {
 	int	i;
@@ -65,8 +48,9 @@ void	supervisor(t_table *tab, t_philo *philo)
 	while (1)
 	{
 		i = 0;
-		if (!all_philo_eat_num_meal(philo))
+		if (!all_philo_eat_num_meal(philo) && tab->nbr_philo != 0)
 		{
+			printf("all have eaten\n");
 			stop_all_philos(tab, philo);
 			return ;
 		}
@@ -75,104 +59,50 @@ void	supervisor(t_table *tab, t_philo *philo)
 			pthread_mutex_lock(&philo[i].status);
 			if ((get_time() - tab->philo[i].lastimeate) >= tab->t_die)
 			{
-				pthread_mutex_unlock(&philo[i].status);
-				pthread_mutex_lock(&tab->printf);
-				printf("%ld %d died\n", get_time() - tab->start, philo[i].id);
-				pthread_mutex_unlock(&tab->printf);
-				stop_all_philos(tab, philo);
+				supervisor_2(tab, philo, i);
 				return ;
 			}
 			else
 				pthread_mutex_unlock(&philo[i].status);
 			i++;
 		}
+		usleep(1000);
 	}
-}
-void	destroy_philo(t_table *tab, t_philo *philo)
-{
-	int	i;
-
-	i = 0;
-	while (i < tab->nbr_philo)
-	{
-		pthread_mutex_destroy(&philo[i].status);
-		pthread_mutex_destroy(&tab->fork[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&tab->printf);
-	pthread_mutex_destroy(&tab->status);
 }
 
 int	create_philo(t_table *tab)
 {
-	t_philo		*philosopher;
+	t_philo		*philo;
 	int			i;
 
 	tab->philo = malloc(sizeof(t_philo) * (tab->nbr_philo));
 	if (!tab->philo)
 		return (0);
-	get_time_start(tab);
-	philosopher = tab->philo;
-	initial_philo(tab, philosopher);
+	philo = tab->philo;
+	initial_philo(tab, philo);
 	i = 0;
 	while (i < tab->nbr_philo)
 	{
-		pthread_create(&philosopher[i].thread, NULL, lifestyle, &philosopher[i]);
+		pthread_create(&philo[i].thread, NULL, lifestyle, &philo[i]);
 		i++;
 	}
-	supervisor(tab, philosopher);
-	join_philo(tab, philosopher);
-	destroy_philo(tab, philosopher);
+	supervisor(tab, philo);
+	join_philo(tab, philo);
+	destroy_philo(tab, philo);
 	free(tab->fork);
-	free(philosopher);
+	free(philo);
 	return (1);
 }
 
 int	main(int argc, char **argv)
 {
-	t_table tab;
-	
+	t_table	tab;
+
 	if (!check_arg(argc, argv))
 		return (1);
 	if (!initial_tab(argv, &tab))
-		return(1);
+		return (1);
 	if (!create_philo(&tab))
-		return(1);
-	// printf_arg(&tab);
+		return (1);
 	return (0);
 }
-
-// int	main(int argc, char **argv)
-// {
-// 	if (check_arg(argc, argv) == -1)
-// 		return (1);
-	
-// 	pthread_t thread1;
-// 	pthread_t thread2;
-	
-// 	long value1 = 1;
-
-// 	pthread_create(&thread1, NULL, computation, (void *)&value1);
-// 	pthread_create(&thread2, NULL, computation, (void *)&value1);
-// 	pthread_join(thread1, NULL);
-// 	return (0);
-// }
-// void	*computation(void *add)
-// {
-// 	long	*add_num = (long *)add;
-// 	*add_num = 3;
-// 	printf ("add : %ld\n", add_num);
-// 	return (NULL);
-// }
-
-// For initialize
-// int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr);
-
-// For lock and unlock
-// int pthread_mutex_lock(pthread_mutex_t *mutex);
-// int pthread_mutex_unlock(pthread_mutex_t *mutex);
-// Both of these functions return 0 for success and an error code otherwise.
-
-// For destroy
-// int pthread_mutex_destroy(pthread_mutex_t *mutex);
-// This function destroys an unlocked mutex;

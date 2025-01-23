@@ -6,18 +6,18 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:57:03 by peli              #+#    #+#             */
-/*   Updated: 2025/01/16 15:35:02 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/23 11:53:10 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libra.h"
 
-int ft_isdigit(char c)
+int	ft_isdigit(char c)
 {
 	if (c < '0' || c > '9')
-		return 0;
+		return (0);
 	else
-		return 1;
+		return (1);
 }
 
 int	ft_atoi(char *str)
@@ -66,7 +66,7 @@ int	check_arg(int argc, char **argv)
 
 	i = 1;
 	result = 0;
-	if (argc > 6 || argc < 5 )
+	if (argc > 6 || argc < 5)
 	{
 		printf ("erreurs of the num of argument\n");
 		return (0);

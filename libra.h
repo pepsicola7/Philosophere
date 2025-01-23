@@ -6,28 +6,28 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:51:06 by peli              #+#    #+#             */
-/*   Updated: 2025/01/19 22:18:35 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/23 12:18:31 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SRC_H
-#define SRC_H
+#ifndef LIBRA_H
+# define LIBRA_H
 
-#include <stdio.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <time.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <limits.h>
+# include <sys/time.h>
+# include <sys/types.h>
+# include <time.h>
 
-typedef struct s_table t_table;
+typedef struct s_table	t_table;
 
 typedef struct s_philo
 {
-	int			id;
-	int			ate_meal;
+	int				id;
+	int				ate_meal;
 	long			lastimeate;
 	int				t_die;
 	int				t_eat;
@@ -35,12 +35,12 @@ typedef struct s_philo
 	int				num_meal;
 	long			start;
 	int				stop;
-	pthread_t	thread;
-	t_table		*table;
+	pthread_t		thread;
+	t_table			*table;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	status;
-} t_philo;
+}	t_philo;
 
 typedef struct s_table
 {
@@ -55,7 +55,7 @@ typedef struct s_table
 	pthread_mutex_t	printf;
 	pthread_mutex_t	status;
 	int				stop;
-} t_table;
+}	t_table;
 
 int		check_arg(int argc, char **argv);
 int		is_argv_valide(char *str);
@@ -66,10 +66,13 @@ int		create_philo(t_table *tab);
 void	initial_philo(t_table *tab, t_philo *philosopher);
 void	*lifestyle(void *arg);
 void	supervisor(t_table *tab, t_philo *philo);
-void	sleeping(t_philo *philo);
+void	sleeping(t_philo *pthreadhilo);
 void	eating(t_philo *philo);
-void	get_time_start(t_table *tab);
 long	get_time(void);
-void	ft_usleep(useconds_t time_in_ms);
 void	philo_printf(t_philo *philo, char *message);
+void	join_philo(t_table *tab, t_philo *philosopher);
+void	stop_all_philos(t_table *tab, t_philo *philo);
+void	destroy_philo(t_table *tab, t_philo *philo);
+int		stop_sim(t_philo *philo);
+void	supervisor_2(t_table *tab, t_philo *philo, int i);
 #endif
