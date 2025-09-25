@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 18:57:52 by peli              #+#    #+#             */
-/*   Updated: 2025/01/23 12:27:01 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/23 12:50:41 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,11 @@ void	initial_philo(t_table *tab, t_philo *philosopher)
 		init_2(tab, philosopher);
 		philosopher->id = i + 1;
 		pthread_mutex_init(&philosopher->status, NULL);
+		philosopher->right_fork = &(tab->fork[i]);
 		if (i != tab->nbr_philo - 1)
-		{
-			philosopher->right_fork = &(tab->fork[i]);
 			philosopher->left_fork = &(tab->fork[i + 1]);
-		}
 		else
-		{
-			philosopher->right_fork = &(tab->fork[0]);
-			philosopher->left_fork = &(tab->fork[i]);
-		}
+			philosopher->left_fork = &(tab->fork[0]);
 		philosopher++;
 	}
 }

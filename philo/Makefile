@@ -1,5 +1,5 @@
 NAME = philo
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=leak -g
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread -g
 CC = cc
 RM = rm -rf
 

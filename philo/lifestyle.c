@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 19:02:15 by peli              #+#    #+#             */
-/*   Updated: 2025/01/23 12:10:43 by peli             ###   ########.fr       */
+/*   Updated: 2025/01/23 12:46:38 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	*lifestyle(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep(200);
+		usleep(1000);
 	while (1)
 	{
 		if (stop_sim(philo) == 1)
